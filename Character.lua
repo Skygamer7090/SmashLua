@@ -1,8 +1,10 @@
 local c = require("Class")
-local Character = c:derive("Character")
------------vfsvsfceaf ae
-function Character:new()
+local Vector2 = require("Vector2")
 
+local Character = c:derive("Character")
+
+function Character:new(x, y)
+    self.pos = Vector2(x, y)
 end
 
 function Character:draw()
