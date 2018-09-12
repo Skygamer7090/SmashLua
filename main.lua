@@ -16,8 +16,4 @@ function love.draw()
         --Map:draw()
         
     end
-<<<<<<< HEAD
-end1
-=======
 end
->>>>>>> dd8d2e77665f9d88c4dd214dbe52b2023867dd83
