@@ -15,12 +15,13 @@ local gm = {
     ["Start"] = {
         ["Players Select"] = Load_Player_Select,
         ["Extras"] = {
-            ["FPEAINFAIEP"] = {
-
-            }
+            ["Test 2"] = {
+                ["back"] = {},
+            },
+            ["back"] = {},
         },
-        ["back"] = Exit_Action,
-    },
+        ["back"] = {},
+        },
     ["Exit"] = Exit_Action,
 }
 

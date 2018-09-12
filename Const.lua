@@ -5,7 +5,7 @@ GAME_STATE = "GAME"
 IN_GAME_STATE = "MENU"
 
 FONTS = {
-    MENU_FONT = love.graphics.newFont("BEBAS.ttf")
+    MENU_FONT = love.graphics.newFont("BEBAS.ttf", 30)
 }
 
 ORIGINAL_RES = {x = 800, y = 600}
