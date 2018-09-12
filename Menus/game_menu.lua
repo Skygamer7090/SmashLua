@@ -2,11 +2,13 @@ function Exit_Action(content)
     
 end
 
+function Load_Player_Select()
+    
+end
+
 local gm = {
     ["Start"] = {
-        ["Players Select"] = {
-
-        },
+        ["Players Select"] = Load_Player_Select,
         ["Extras"] = {
 
         }
