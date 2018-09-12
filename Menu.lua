@@ -45,9 +45,6 @@ function Menu:new()
     self.menus = {}
     AddMenu(self.menus, "Menus/game_menu")
 
-    for i,v in pairs(self.menus[1]) do
-        print(i)
-    end
 end 
 
 function Menu:update(dt)
@@ -55,7 +52,9 @@ function Menu:update(dt)
 end
 
 function Menu:draw()
-
+    for i,v in pairs(self.menus) do
+        
+    end
 end
 
 function love.mousepressed(x, y, b)
@@ -66,26 +65,8 @@ function AddMenu(menuTab, menuLink)
     --loads the menu table
     local game_menu = require(menuLink)
 
-    --temp table for sorting the keys (not the tables) of the game_menu table
-    local t = {}
-    local t2 = {}
-
-
-    for i,v in pairs(game_menu) do
-        table.insert(t, i)
-    end
-
-    -- the sorting itself
-    table.sort(t, 
-        function(a,b) return a > b end)
-
-    for i,v in pairs(t) do
-        print(i,v)
-        t2[v] = game_menu[v]
-    end
-
     --final insert
-    table.insert(menuTab, t2)
+    table.insert(menuTab, game_menu)
 end
 
 return Menu
