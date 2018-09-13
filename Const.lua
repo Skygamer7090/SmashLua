@@ -1,8 +1,8 @@
 --the state of the global game
-GAME_STATE = "GAME"
+GAME_STATE = "OPENING"
 
 --the state of the match
-IN_GAME_STATE = "MENU"
+IN_GAME_STATE = "PLAY"
 
 FONTS = {
     MENU_FONT = love.graphics.newFont("BEBAS.ttf", 30)

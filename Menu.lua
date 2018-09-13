@@ -4,7 +4,7 @@ local c = require("Class")
 local Menu = c:derive("Menu")
 local Vector2 = require("Vector2")
 
-local MENU_ITEM_OFFSET = 20
+
 local MENU_FONT = FONTS.MENU_FONT
 local MENU_WIDTH = 500
 local MENU_HEIGHT = 400
@@ -12,6 +12,8 @@ local MENU_PADDING = 50
 
 local BUTTON_HEIGHT = MENU_FONT:getHeight()
 local BUTTON_WIDTH = 0
+
+local MENU_ITEM_OFFSET = BUTTON_HEIGHT + 5
 
 function Menu:new()
     -- container for all menus
@@ -22,12 +24,17 @@ function Menu:new()
     self.menus_originals = {}
     self.queue = {}
     self.buttons = {}
-    self.currentMenu = 1
+    self.currentMenu = 0
+    
+    -- menu order:
+    -- 1 = opening
+    -- 2 = in game pause
     self:AddMenu("Menus/game_menu")
-
+    self:AddMenu("Menus/pause_menu")
+    
 end 
 
-function Menu:buttonPress(buttonName, contentTab)
+function Menu:buttonPress(buttonName, contentTab, GameC)
     local menu_type = type(contentTab[buttonName])
     
     if buttonName == "back" then
@@ -38,8 +45,8 @@ function Menu:buttonPress(buttonName, contentTab)
         table.remove(self.queue, #self.queue)
         return prev
     elseif menu_type == "function" then
-        contentTab[buttonName](contentTab)
-
+        contentTab[buttonName](GameC)
+        
         -- returns the table unchanged
         return contentTab
     elseif menu_type == "table" then 
@@ -47,34 +54,6 @@ function Menu:buttonPress(buttonName, contentTab)
         table.insert(self.queue, contentTab)
         return contentTab[buttonName]
     end
-end
-
-function searchTable(table, to_find)
-    for i,v in pairs(table) do
-        if v == to_find then
-            return true 
-        end
-    end 
-    return false
-end
-
-function GetParentTable(originalTab, currentTab) 
-    print(type(originalTab), type(currentTab))
-    local search = originalTab
-    
-    print(unpack(currentList))
-    local found = false
-
-    -- stops when the index is found
-    while not found do
-        -- if its not in current search table goes on
-        for i,v in pairs(search) do
-            found = searchTable(search, currentTab)
-        end
-
-    end
-
-    return search
 end
 
 function Menu:draw()
@@ -91,7 +70,7 @@ function Menu:draw()
         y = self.pos.y - MENU_PADDING/2,
         w = MENU_WIDTH,
         h = MENU_HEIGHT,
-        r = MENU_PADDING*0.5,
+        r = MENU_PADDING * 0.5,
     }
 
     --draws border
@@ -122,7 +101,7 @@ function Menu:draw()
     BUTTON_WIDTH = max_width
 end
 
-function Menu:mousepressed(x, y, b)
+function Menu:mousepressed(x, y, b, controller)
     local index = 0
     for i,v in pairs(self.menus[self.currentMenu]) do
         local box = {
@@ -133,7 +112,7 @@ function Menu:mousepressed(x, y, b)
         }
         
         if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
-            self.menus[self.currentMenu] = self:buttonPress(i, self.menus[self.currentMenu])
+            self.menus[self.currentMenu] = self:buttonPress(i, self.menus[self.currentMenu], controller)
         end
 
         index = index + 1

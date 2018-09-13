@@ -1,14 +1,12 @@
+require("Const")
+
 function Exit_Action(content) 
     print("exit app...")
     love.event.quit(0)
 end
 
-function Load_Player_Select()
-    print("load player select...")
-end
-
-function Load_Player_Select()
-    
+function Load_Player_Select(GC)
+    GAME_STATE = "PLAYER_SELECT"
 end
 
 local gm = {
