@@ -1,10 +1,15 @@
+love.window.setFullscreen(true)
 require "Const" 
 local Menu = require("Menu")
 local GameCont = require("GameController")
+local Player_Select = require("Player_Select")
 
 function love.load()
+    
+    love.keyboard.setKeyRepeat(true)
     Menu = Menu()
     GameCont = GameCont()
+    Player_Select = Player_Select()
 end
 
 function love.update(dt)
@@ -26,7 +31,7 @@ function love.draw()
             
         end
     elseif GAME_STATE == "PLAYER_SELECT" then
-        
+        Player_Select:draw()
     end
     
 end
@@ -46,6 +51,6 @@ function love.mousepressed(x, y, b)
             
         end
     elseif GAME_STATE == "PLAYER_SELECT" then
-        
+        Player_Select:mousepressed(x, y, b, GameCont)
     end
 end
