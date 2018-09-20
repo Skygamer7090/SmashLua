@@ -36,10 +36,15 @@ function love.draw()
     
 end
 
+function love.keypressed(k)
+    if k == "escape" then
+        Menu:reset()
+    end 
+end
+
 function love.mousepressed(x, y, b)
     x = x / SCALE.x
     y = y / SCALE.y
-
 
     if GAME_STATE == "OPENING" then
         Menu:mousepressed(x, y, b, GameCont) 

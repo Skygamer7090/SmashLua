@@ -18,10 +18,12 @@ local ROWS = 3
 
 function PS:new()
     self.Selected = {}
+    self.buttons = require("Menus/Player_Select_Menu")
     self.Characters = require("Character_List")
 end 
 
 function PS:draw()
+
     love.graphics.setColor(1,1,1)
     love.graphics.rectangle("fill", 0, 0, ORIGINAL_RES.x, ORIGINAL_RES.y)
 
@@ -50,8 +52,16 @@ function PS:draw()
         love.graphics.print(atr.name, box.x, box.y)
     end
 
+    for i,v in pairs(self.buttons) do
+        local box = v.box
+        love.graphics.setColor(0,1,0,0.5)
+        love.graphics.rectangle("fill", box.x, box.y, box.w, box.h )
 
-    self:list_traverser(draw_cells)
+        love.graphics.setColor(1,0,0)
+        love.graphics.print(v.name, box.x, box.y)
+    end
+
+    button_traverser(self.Characters,draw_cells)
 end
 
 
@@ -63,19 +73,28 @@ function PS:mousepressed(x, y, b, g)
         end
     end
 
-    self:list_traverser(on_button_click)
+    
+
+    button_traverser(self.Characters, on_button_click)
+     
+    for i,v in pairs(self.buttons) do
+        local box = v.box
+        if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
+            v.action()
+        end
+    end
 end
 
 
 
 -- goes through the list and executes the function at every itteration
-function PS:list_traverser(func)
+function button_traverser(list, func)
     local list_margin = 20
     local box_margin = 5
     local row = 0
     local col = 0
     love.graphics.setColor(1,0,0)
-    for i, v in pairs(self.Characters) do
+    for i, v in pairs(list) do
 
         local box = {}
         box.w = (MENU_WIDTH - list_margin * 2 - COLUMNS * box_margin) / COLUMNS
@@ -97,5 +116,6 @@ function PS:list_traverser(func)
         func(i, box, v)
     end
 end
+
 
 return PS

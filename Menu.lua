@@ -130,4 +130,11 @@ function Menu:AddMenu(menuLink)
     table.insert(self.queue, game_menu)
 end
 
+function Menu:reset()
+    GAME_STATE = "OPENING"
+    IN_GAME_STATE = "PLAY"
+    self.queue = {}
+    self.menus = self.menus_originals
+end
+
 return Menu
