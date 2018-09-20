@@ -1,20 +1,23 @@
 local c = require("Class")
 local gc = c:derive("GameController")
+local Map = require("Map")
 
-function gc:new()
+function gc:new(players, map)
+    --self:initiatePlayers(players)
     self.players = {}
-    --self.Map = Map()
+    self.Map = Map("FD", "res/FD_bkg1.jpg")
     
 end
 
 function gc:draw()
-    love.graphics.rectangle("fill", 0, 0, 100, 100)
+    self.Map:draw()
 end
 
-function gc:initiatePlayers(playerCount)
-    for i = 1, playerCount, 1 do
-        print("inesrted player: " .. i)
-        --table.insert(self.players, Player())
+function gc:initiatePlayers(playerTab)
+
+    for i,v in pairs(playerTab) do
+        print("Added player " .. i)
+        table.insert(self.player, v)
     end
 end
 

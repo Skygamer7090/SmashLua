@@ -11,6 +11,7 @@ local MENU_WIDTH = ORIGINAL_RES.x - (MENU_MARGIN.LEFT + MENU_MARGIN.RIGHT)
 local MENU_HEIGHT = ORIGINAL_RES.y - (MENU_MARGIN.UP + MENU_MARGIN.DOWN)
 local MENU_X = MENU_MARGIN.LEFT
 local MENU_Y = MENU_MARGIN.UP
+local MENU_FONT = FONTS.MENU_FONT
 
 local COLUMNS = 10
 local ROWS = 3
@@ -48,17 +49,20 @@ function PS:draw()
             love.graphics.rectangle("fill", box.x, box.y, box.w, box.h )
         end
 
+        local ButtonText = love.graphics.newText(MENU_FONT, atr.name)
+
         love.graphics.setColor(1,0,0)
-        love.graphics.print(atr.name, box.x, box.y)
+        love.graphics.draw(ButtonText, box.x, box.y, 0, 0.5, 0.5)
     end
 
     for i,v in pairs(self.buttons) do
         local box = v.box
         love.graphics.setColor(0,1,0,0.5)
-        love.graphics.rectangle("fill", box.x, box.y, box.w, box.h )
+        local ButtonText = love.graphics.newText(MENU_FONT, v.name)
+        love.graphics.rectangle("fill", box.x, box.y, box.w, box.h)
 
         love.graphics.setColor(1,0,0)
-        love.graphics.print(v.name, box.x, box.y)
+        love.graphics.draw(ButtonText, box.x, box.y, 0, 1, 1, -box.w/2 + ButtonText:getWidth()/2, -box.h/2 + ButtonText:getHeight()/2)
     end
 
     button_traverser(self.Characters,draw_cells)
@@ -116,6 +120,5 @@ function button_traverser(list, func)
         func(i, box, v)
     end
 end
-
 
 return PS

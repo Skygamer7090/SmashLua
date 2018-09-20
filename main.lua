@@ -1,14 +1,14 @@
-love.window.setFullscreen(true)
+
 require "Const" 
-local Menu = require("Menu")
+local CMenu = require("Menu")
 local GameCont = require("GameController")
 local Player_Select = require("Player_Select")
 
 function love.load()
     
     love.keyboard.setKeyRepeat(true)
-    Menu = Menu()
-    GameCont = GameCont()
+    Menu = CMenu()
+    GameCont = GameCont();
     Player_Select = Player_Select()
 end
 
@@ -20,6 +20,7 @@ function love.draw()
     love.graphics.scale(SCALE.x, SCALE.y)
     love.graphics.print(GAME_STATE .. " / " .. IN_GAME_STATE)
     if GAME_STATE == "OPENING" then
+        
         Menu.currentMenu = 1
         Menu:draw()
     elseif GAME_STATE == "GAME" then
@@ -39,6 +40,7 @@ end
 function love.keypressed(k)
     if k == "escape" then
         Menu:reset()
+        Menu = CMenu()
     end 
 end
 
