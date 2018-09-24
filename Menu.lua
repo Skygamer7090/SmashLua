@@ -47,6 +47,7 @@ function Menu:buttonPress(buttonName, contentTab, GameC)
     elseif menu_type == "function" then
         contentTab[buttonName](GameC)
         
+        
         -- returns the table unchanged
         return contentTab
     elseif menu_type == "table" then 

@@ -34,7 +34,7 @@ function PS:draw()
     love.graphics.setColor(0,1,1)
     love.graphics.rectangle("fill", MENU_X, MENU_Y, MENU_WIDTH, MENU_HEIGHT)
 
-    function draw_cells(i, box, atr)
+    function draw_cells(i, v, box, atr)
         love.graphics.setColor(1,0,0)
         love.graphics.rectangle("line", box.x, box.y, box.w, box.h)
 
@@ -71,9 +71,10 @@ end
 
 
 function PS:mousepressed(x, y, b, g)
-    function on_button_click(i, box, atr)
+    function on_button_click(i, v, box, atr)
         if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
             self.Selected = i
+            PLAYER_LIST[1] = "Test"
         end
     end
 
@@ -84,7 +85,7 @@ function PS:mousepressed(x, y, b, g)
     for i,v in pairs(self.buttons) do
         local box = v.box
         if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
-            v.action()
+            v.action(g, self.Selected)
         end
     end
 end
@@ -117,7 +118,7 @@ function button_traverser(list, func)
 
         col = col + 1
 
-        func(i, box, v)
+        func(i, v, box, v)
     end
 end
 

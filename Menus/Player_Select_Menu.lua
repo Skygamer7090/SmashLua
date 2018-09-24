@@ -5,9 +5,10 @@ function Back()
     IN_GAME_STATE = "MENU"
 end
 
-function Play() 
+function Play(gc) 
     GAME_STATE = "GAME"
     IN_GAME_STATE = "PLAY"
+    gc:initiatePlayers(PLAYER_LIST)
 end
 
 local PSM = {

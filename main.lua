@@ -5,10 +5,8 @@ local GameCont = require("GameController")
 local Player_Select = require("Player_Select")
 
 function love.load()
-    
-    love.keyboard.setKeyRepeat(true)
     Menu = CMenu()
-    GameCont = GameCont();
+    GameCont = GameCont()
     Player_Select = Player_Select()
 end
 
@@ -29,7 +27,7 @@ function love.draw()
             Menu.currentMenu = 2
             Menu:draw()
         elseif IN_GAME_STATE == "PLAY" then
-            
+            GameCont:update(dt)
         end
     elseif GAME_STATE == "PLAYER_SELECT" then
         Player_Select:draw()
