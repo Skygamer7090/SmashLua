@@ -11,7 +11,18 @@ function love.load()
 end
 
 function love.update(dt)
-    --
+    if GAME_STATE == "OPENING" then
+
+    elseif GAME_STATE == "GAME" then
+        
+        if IN_GAME_STATE == "MENU" then
+        
+        elseif IN_GAME_STATE == "PLAY" then
+            GameCont:update(dt)
+        end
+    elseif GAME_STATE == "PLAYER_SELECT" then
+        
+    end
 end
 
 function love.draw()
@@ -27,7 +38,7 @@ function love.draw()
             Menu.currentMenu = 2
             Menu:draw()
         elseif IN_GAME_STATE == "PLAY" then
-            GameCont:update(dt)
+            
         end
     elseif GAME_STATE == "PLAYER_SELECT" then
         Player_Select:draw()
@@ -36,10 +47,23 @@ function love.draw()
 end
 
 function love.keypressed(k)
-    if k == "escape" then
-        Menu:reset()
-        Menu = CMenu()
-    end 
+    if GAME_STATE == "OPENING" then
+        if k == "escape" then
+            Menu:reset()
+            Menu = CMenu()
+        end 
+    elseif GAME_STATE == "GAME" then
+
+        if IN_GAME_STATE == "MENU" then
+
+        elseif IN_GAME_STATE == "PLAY" then
+            GameCont:keypressed(k)
+        end
+    elseif GAME_STATE == "PLAYER_SELECT" then
+
+    end
+
+    
 end
 
 function love.mousepressed(x, y, b)

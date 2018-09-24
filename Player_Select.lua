@@ -74,7 +74,7 @@ function PS:mousepressed(x, y, b, g)
     function on_button_click(i, v, box, atr)
         if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
             self.Selected = i
-            PLAYER_LIST[1] = "Test"
+            PLAYER_LIST[1] = "Metroid"
         end
     end
 

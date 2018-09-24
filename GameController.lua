@@ -5,21 +5,33 @@ local Map = require("Map")
 
 function gc:new(players, map)
     self.players = {}
-    self.Map = Map("FD", "res/FD_bkg1.jpg", "FD_colmap") 
+    self.Map = Map("FD", "res/FD_bkg1.jpg", "colMap/FD_colmap") 
 end
 
 function gc:update(dt)
-    Map:update(dt, self.players)
+    self.Map:update(dt, self.players)
+    for i,v in pairs(self.players) do
+        v:update(dt)
+    end
 end
 
 function gc:draw()
     self.Map:draw()
+    love.graphics.setColor(1,1,1)
+    for i,v in pairs(self.players) do
+        v:draw()
+        --v:drawDEBUG()
+    end
 end
 
 function gc:initiatePlayers(players)
     for i, v in pairs(players) do
-        table.insert(self.players, Player(v))
+        table.insert(self.players, Player(v, i))
     end 
+end
+
+function gc:keypressed(k)
+
 end
 
 return gc
