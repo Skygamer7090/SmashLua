@@ -42,16 +42,15 @@ function m:update(dt, players)
                 m = {x = b2.x + b2.w/2, y = b2.y + b2.h/2}
             }
 
-            local sp1, sp2 = Get2ShortestPoints(b2.c, b1.c.m)
-
-            if  b1.x + b1.w > b2.x and 
-                b1.x < b2.x + b2.w and 
-                b1.y + b1.h > b2.y and
-                b1.y < b2.y + b2.h then    
-                    p.ground = true
-                    p.jumps = p.MaxJumps
-                    p.yv = 0
-                    b1.y = b2.y - b1.h
+            local pts = Get2ShortestPoints(b2.c, b1.c.m)
+            
+            print("_________ PTS __________")
+            for i, v in pairs(pts) do
+                print(v.x, v.y)
+            end
+            
+            for i,v in pairs(pts) do
+                if 
             end
         end
     end
