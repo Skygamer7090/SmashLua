@@ -24,7 +24,9 @@ function Menu:new()
     self.menus_originals = {}
     self.queue = {}
     self.buttons = {}
-    self.currentMenu = 0
+    self.currentMenu = 1
+    self.HighlightedInd = 1
+    self.SelectedIndName = ""
     
     -- menu order:
     -- 1 = opening
@@ -35,6 +37,7 @@ function Menu:new()
 end 
 
 function Menu:buttonPress(buttonName, contentTab, GameC)
+    print(buttonName)
     local menu_type = type(contentTab[buttonName])
     
     if buttonName == "back" then
@@ -54,6 +57,24 @@ function Menu:buttonPress(buttonName, contentTab, GameC)
         -- returns the new table
         table.insert(self.queue, contentTab)
         return contentTab[buttonName]
+    end
+end
+
+function Menu:update(dt)
+    local count = 0
+    for i,v in pairs(self.menus[self.currentMenu]) do
+        local box = {
+            x = self.pos.x,
+            y = self.pos.y + count * MENU_ITEM_OFFSET,
+            w = BUTTON_WIDTH,
+            h = BUTTON_HEIGHT
+        }
+        local x, y = love.mouse.getPosition()
+        if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
+            self.HighlightedInd = count
+            self.SelectedIndName = i
+        end
+        count = count + 1
     end
 end
 
@@ -90,10 +111,13 @@ function Menu:draw()
         local text = love.graphics.newText(MENU_FONT,"- " .. i)
         local width = text:getWidth()
 
-        if width > max_width then
-            max_width = width
+    
+        max_width = math.max(width, max_width)
+    
+        if index == self.HighlightedInd then
+            self.SelectedIndName = i
+            love.graphics.rectangle("line", self.pos.x, self.pos.y + index * MENU_ITEM_OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT)
         end
-        
         love.graphics.draw(text, self.pos.x, self.pos.y + index * MENU_ITEM_OFFSET)
         index = index + 1
     end
@@ -137,5 +161,25 @@ function Menu:reset()
     self.queue = {}
     self.menus = self.menus_originals
 end
+
+function Menu:keypressed(key, controller)
+    
+
+    local count = 0
+    for i,v in pairs(self.menus[self.currentMenu]) do
+        count = count + 1
+    end
+
+    if table.contains({"up", "w"}, key) then
+        self.HighlightedInd = (self.HighlightedInd - 1) % count
+    elseif table.contains({"down", "s"}, key) then
+        self.HighlightedInd = (self.HighlightedInd + 1) % count
+    end
+
+    if key == "return" then
+        self.menus[self.currentMenu] = self:buttonPress(self.SelectedIndName, self.menus[self.currentMenu], controller)
+    end
+end
+
 
 return Menu

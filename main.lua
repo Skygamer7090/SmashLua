@@ -12,7 +12,9 @@ end
 
 function love.update(dt)
     if GAME_STATE == "OPENING" then
-
+        if Menu.menus ~= nil then
+            Menu:update()
+        end
     elseif GAME_STATE == "GAME" then
         
         if IN_GAME_STATE == "MENU" then
@@ -48,6 +50,7 @@ end
 
 function love.keypressed(k)
     if GAME_STATE == "OPENING" then
+        Menu:keypressed(k, GameCont)
         if k == "escape" then
             Menu:reset()
             Menu = CMenu()
