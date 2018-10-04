@@ -21,7 +21,7 @@ end
 function col:drawDEBUG()
     love.graphics.setColor(1,0,0,0.4)
     for i,v in pairs(self.cols) do
-        love.graphics.rectangle("fill", v.x, v.y, v.w, v.h)
+        love.graphics.rectangle("fill", v.x - v.w/2, v.y - v.h/2, v.w, v.h)
     end
 end
 

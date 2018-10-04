@@ -37,7 +37,6 @@ function Menu:new()
 end 
 
 function Menu:buttonPress(buttonName, contentTab, GameC)
-    print(buttonName)
     local menu_type = type(contentTab[buttonName])
     
     if buttonName == "back" then
@@ -116,7 +115,7 @@ function Menu:draw()
     
         if index == self.HighlightedInd then
             self.SelectedIndName = i
-            love.graphics.rectangle("line", self.pos.x, self.pos.y + index * MENU_ITEM_OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT)
+            love.graphics.rectangle("line", self.pos.x, self.pos.y + index * MENU_ITEM_OFFSET - 2, BUTTON_WIDTH, BUTTON_HEIGHT, 5)
         end
         love.graphics.draw(text, self.pos.x, self.pos.y + index * MENU_ITEM_OFFSET)
         index = index + 1

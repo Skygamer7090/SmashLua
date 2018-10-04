@@ -19,7 +19,7 @@ function gc:draw()
     self.Map:draw()
     love.graphics.setColor(1,1,1)
     for i,v in pairs(self.players) do
-        v:draw()
+        v:draw(self.Map.Collider.cols)
         --v:drawDEBUG()
     end
 end

@@ -1,6 +1,6 @@
 require("Const")
 
 local tab = {
-    {x = 40, y = 490, w = ORIGINAL_RES.x - 80, h = 50},
+    {x = ORIGINAL_RES.x/2, y = 500, w = ORIGINAL_RES.x - 80, h = 60, r = 0},
 }
 return tab
