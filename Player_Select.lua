@@ -1,5 +1,7 @@
 local c = require("Class")
 local PS = c:derive("Player Select")
+local PIcon = require("PlayerIcon")
+local Point = require("Point")
 
 local MENU_MARGIN = {
     UP = 50,
@@ -21,6 +23,8 @@ function PS:new()
     self.Selected = {}
     self.buttons = require("Menus/Player_Select_Menu")
     self.Characters = require("Character_List")
+    self.PlayerIcons = {}
+    self:AddPlayer()
 end 
 
 function PS:draw()
@@ -34,35 +38,49 @@ function PS:draw()
     love.graphics.setColor(0,1,1)
     love.graphics.rectangle("fill", MENU_X, MENU_Y, MENU_WIDTH, MENU_HEIGHT)
 
-    function draw_cells(i, v, box, atr)
+    function draw_cells(i, v, box)
         love.graphics.setColor(1,0,0)
         love.graphics.rectangle("line", box.x, box.y, box.w, box.h)
 
-        if atr.image ~= nil then
-            local img_scale_x = box.w / atr.image:getWidth()
-            local img_scale_y = box.w / atr.image:getHeight()
+        if v.image ~= nil then
+            local img_scale_x = box.w / v.image:getWidth()
+            local img_scale_y = box.w / v.image:getHeight()
             love.graphics.setColor(1,1,1)
-            love.graphics.draw(atr.image, box.x, box.y, 0, img_scale_x, img_scale_y)
+            love.graphics.draw(v.image, box.x, box.y, 0, img_scale_x, img_scale_y)
         end 
         if i == self.Selected then
             love.graphics.setColor(0,1,0,0.5)
             love.graphics.rectangle("fill", box.x, box.y, box.w, box.h )
         end
 
-        local ButtonText = love.graphics.newText(MENU_FONT, atr.name)
+        local ButtonText = love.graphics.newText(MENU_FONT, v.name)
 
         love.graphics.setColor(1,0,0)
         love.graphics.draw(ButtonText, box.x, box.y, 0, 0.5, 0.5)
     end
 
     for i,v in pairs(self.buttons) do
+        local BUTTON_ALPHA
+        if v.enabled then
+            BUTTON_ALPHA = 1
+        else
+            BUTTON_ALPHA = 0
+        end
+
         local box = v.box
-        love.graphics.setColor(0,1,0,0.5)
+        love.graphics.setColor(0, BUTTON_ALPHA, 0,0.5)
         local ButtonText = love.graphics.newText(MENU_FONT, v.name)
         love.graphics.rectangle("fill", box.x, box.y, box.w, box.h)
 
-        love.graphics.setColor(1,0,0)
+        love.graphics.setColor(BUTTON_ALPHA,0,0)
         love.graphics.draw(ButtonText, box.x, box.y, 0, 1, 1, -box.w/2 + ButtonText:getWidth()/2, -box.h/2 + ButtonText:getHeight()/2)
+    end
+
+    local Padding = 100
+    local Margin = 10
+    for i,v in pairs(self.PlayerIcons) do 
+        i = i - 1
+        v:draw(Point(MENU_X + (i*100 + Margin*i) + Padding, MENU_Y + MENU_HEIGHT - 200 - Margin))
     end
 
     button_traverser(self.Characters,draw_cells)
@@ -71,25 +89,29 @@ end
 
 
 function PS:mousepressed(x, y, b, g)
-    function on_button_click(i, v, box, atr)
+    function on_button_click(i, v, box)
+        
         if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
             self.Selected = i
-            PLAYER_LIST[1] = "Metroid"
+            PLAYER_LIST[1] = v.name
         end
     end
-
-    
 
     button_traverser(self.Characters, on_button_click)
      
     for i,v in pairs(self.buttons) do
-        local box = v.box
-        if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
-            v.action(g, self.Selected)
-        end
+        if v.enabled then
+            local box = v.box
+            if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
+                v.action(g, self, v)
+            end
+        end 
     end
 end
 
+function PS:AddPlayer()
+    table.insert(self.PlayerIcons, PIcon())
+end
 
 
 -- goes through the list and executes the function at every itteration
@@ -117,7 +139,7 @@ function button_traverser(list, func)
         box.y = MENU_Y + list_margin + row * (box.h + box_margin)
 
         col = col + 1
-
+        
         func(i, v, box, v)
     end
 end

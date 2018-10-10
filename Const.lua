@@ -5,26 +5,34 @@ GAME_STATE = "OPENING"
 IN_GAME_STATE = "PLAY"
 
 PLAYER_LIST = {}
+NB_OF_PLAYERS = 1
 
 FONTS = {
     MENU_FONT = love.graphics.newFont("BEBAS.ttf", 30)
 }
+
+local Point = require("Point")
+local Ray = require("Ray")
 
 ORIGINAL_RES = {x = 800, y = 600}
 SCALE = {x = love.graphics.getWidth()/ ORIGINAL_RES.x, y = love.graphics.getHeight() / ORIGINAL_RES.y}
 print(SCALE.x, SCALE.y)
 
 --gets distance between 2 pts
+--point#1, point#2
 function GetDistance(p1, p2)
     return math.sqrt(math.pow(p1.x - p2.x, 2) + math.pow(p1.y - p2.y, 2))
 end 
 
-function Get2ShortestPoints(Points, t, sorted)
+--Gets the closest points from a table of points
+--the original point, the table of points
+function GetClosestPoints(Points, p)
     local pts = {}
     for i,v in pairs(Points) do
         if v ~= Points.m then
-            if not IsColRect(t.x, t.y, v.x, v.y, {Points.tl, Points.tr, Points.br, Points.bl}) then
-                v.d = GetDistance(v, t)
+            local R = Ray(p.x, p.y, v.x, v.y)
+            if not GetRayRectCollision(R, {Points.tl, Points.tr, Points.br, Points.bl}) then
+                v.d = GetDistance(v, R:GetOriginPoint())
                 table.insert(pts, v)
             end
         end
@@ -34,24 +42,11 @@ function Get2ShortestPoints(Points, t, sorted)
     return pts
 end 
 
---detects line collision and where
-function LineToLine(x1, y1, x2, y2,   x3, y3, x4, y4) 
-    local uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
-    local uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
-
-    if (uA > 0 and uA < 1 and uB > 0 and uB < 1) then
-        local intersectionX = x1 + (uA * (x2-x1));
-        local intersectionY = y1 + (uA * (y2-y1)); 
-        return true, intersectionX, intersectionY
-    end    
-    return false, 0, 0
-end
-
 --tests if line hits box
-function IsColRect(x1, y1, x2, y2, rect) 
-    for i,v in pairs(GetVerts(rect)) do
-        --print(string.format("Intersection test: x = %i, y = %i | tx = %i, ty = %i | line = (%i, %i) -> (%i, %i) ", x1, y1, x2, y2,     rect[i].x, rect[i].y, rect[i2].x, rect[i2].y))
-        if LineToLine(x1, y1, x2, y2,     v[1].x, v[1].y, v[2].x, v[2].y) then
+--Ray, rect (table with 4 points)
+function GetRayRectCollision(Ray, rect) 
+    for i,v in pairs(GetRays(rect)) do
+        if Ray:CheckCollision(v) then
             return true;
         end
     end
@@ -59,11 +54,12 @@ function IsColRect(x1, y1, x2, y2, rect)
 end
 
 --returns the closest point in a list of points
-function GetClosestPoint(x1,y2, pts)
+--origin point, table of points to check
+function GetClosestPoint(p, pts)
     local closest = pts[1]
-    local cd = GetDistance({x = x1, y = y2}, pts[1])
+    local cd = GetDistance(p, pts[1])
     for i,v in pairs(pts) do
-        local dist = GetDistance({x = x1, y = y2}, pts[i])
+        local dist = GetDistance(p, pts[i])
         if dist <= cd then
             closest = pts[i]
         end
@@ -83,6 +79,7 @@ function GetRelPos(p1, p2)
 end
 
 --checks if table contains value
+--table to check in, value to check for
 function table.contains(t, val)
     for i,v in pairs(t) do
         if v == val then return true end
@@ -91,6 +88,7 @@ function table.contains(t, val)
 end 
 
 --gets the corner points and the midle points
+--the box to get corners from
 function GetPoints(b1)
      --[[
             tr = top right
@@ -102,20 +100,22 @@ function GetPoints(b1)
 
 
     return {
-        tr = {x = b1.x + b1.w/2, y = b1.y - b1.h/2},
-        tl = {x = b1.x - b1.w/2, y = b1.y - b1.h/2},
-        br = {x = b1.x + b1.w/2, y = b1.y + b1.h/2},
-        bl = {x = b1.x - b1.w/2, y = b1.y + b1.h/2},
-        m = {x = b1.x, y = b1.y}
+        tr = Point(b1.x + b1.w/2, b1.y - b1.h/2),
+        tl = Point(b1.x - b1.w/2, b1.y - b1.h/2),
+        br = Point(b1.x + b1.w/2, b1.y + b1.h/2),
+        bl = Point(b1.x - b1.w/2, b1.y + b1.h/2),
+        m = Point(b1.x, b1.y)
     }
 end
 
---gets the verts from a rect
-function GetVerts(rect)
+--gets the Rays from a rect
+--the rectangle to get Rays from
+function GetRays(rect)
     local verts = {}
     for i,_ in pairs(rect) do
         local i2 = (i % #rect) +1
-        table.insert(verts, {{x = rect[i].x, y = rect[i].y}, {x = rect[i2].x,y = rect[i2].y}})
+        local r = Ray(rect[i].x, rect[i].y, rect[i2].x, rect[i2].y)
+        table.insert(verts, r)
     end
     return verts
 end

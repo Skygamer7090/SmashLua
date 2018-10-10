@@ -13,7 +13,6 @@ function col:GetCols(colmap)
             v.w ~= nil and
             v.h ~= nil then 
             table.insert(self.cols, v)
-            print(v.x, v.y, v.w, v.h)
         end 
     end
 end
