@@ -8,14 +8,18 @@ local Point = require("Point")
 local GRAVITY_FORCE = -500
 local JUMP_TIME = 0.3
 
-function Character:new(name, i)
+function Character:new(name, index)
     local char = require("Characters/" .. name)
+    local img = love.graphics.newImage(char.image)
+    if img == nil then
+        error("invalid character image/sprite")
+    end
 
-    self.Number = i
+    self.Number = index
     self.jumpTimer = 0
     
-    self.controls = require("Controls/player" .. i)
-    self.image = love.graphics.newImage(char.image) 
+    self.controls = require("Controls/player" .. index)
+    self.image = img
     self.speed = 200
     self.onGround = false
     self.MaxJumps = 100
@@ -38,7 +42,7 @@ function Character:draw(MapCols)
 
     local hits = {}
     for i,v in pairs(MapCols) do
-        v.c = GetPoints(v) -- collider collision
+        v.c = GetPoints(v)
         for u,line in pairs(GetRays({v.c.tl, v.c.tr, v.c.br, v.c.bl})) do
             local hit = false
             --print("--From C:draw()-> " .. i .. " -> " .. u)

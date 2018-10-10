@@ -24,8 +24,8 @@ function gc:draw()
     end
 end
 
-function gc:initiatePlayers(players)
-    for i, v in pairs(players) do
+function gc:initiatePlayers()
+    for i, v in pairs(PLAYER_LIST) do
         table.insert(self.players, Player(v, i))
     end 
 end

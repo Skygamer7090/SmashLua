@@ -87,13 +87,18 @@ function PS:draw()
 end
 
 
-
+local INDEX = 0
 function PS:mousepressed(x, y, b, g)
     function on_button_click(i, v, box)
         
         if x > box.x and x < box.w + box.x and y > box.y and y < box.h + box.y then
+            INDEX = (INDEX) % NB_OF_PLAYERS + 1
             self.Selected = i
-            PLAYER_LIST[1] = v.name
+            PLAYER_LIST[INDEX] = v.name
+            self.PlayerIcons[INDEX].image = v.image
+            print(INDEX, NB_OF_PLAYERS)
+            
+            print(INDEX, NB_OF_PLAYERS)
         end
     end
 
@@ -129,7 +134,6 @@ function button_traverser(list, func)
         box.x = MENU_X + list_margin + ((col - 1) * (box.w + box_margin))
 
         if box.x > (MENU_WIDTH - list_margin * 2) then 
-            
             col = 0
             row = row + 1
             if row > ROWS then break end
@@ -139,8 +143,7 @@ function button_traverser(list, func)
         box.y = MENU_Y + list_margin + row * (box.h + box_margin)
 
         col = col + 1
-        
-        func(i, v, box, v)
+        func(i, v, box)
     end
 end
 

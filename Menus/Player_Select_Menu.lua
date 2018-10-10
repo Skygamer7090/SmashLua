@@ -8,7 +8,7 @@ end
 function Play(gc) 
     GAME_STATE = "GAME"
     IN_GAME_STATE = "PLAY"
-    gc:initiatePlayers(PLAYER_LIST)
+    gc:initiatePlayers()
 end
 
 function AddPlayer(gc, playerSelector, CurButton)
